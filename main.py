@@ -10,11 +10,11 @@ from sqlmodel import Field, Session, SQLModel, create_engine, select
 
 
 
-class Hero(SQLModel, table=True):
+class User(SQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True)
     name: str = Field(index=True)
     age: int | None = Field(default=None, index=True)
-    secret_name: str
+    username: str
 
 sqlite_file_name = "db.sqlite"
 sqlite_url = f"sqlite:///{sqlite_file_name}"
@@ -38,6 +38,39 @@ app = FastAPI()
 def on_startup():
     create_db_and_tables()
 
+@app.post("/users/") # ENDPOINT TIPO POST que me crea un user
+def create_user(user: User, session: SessionDep) -> User: # Definir una función
+    session.add(user)
+    session.commit()
+    session.refresh(user)
+    return user
+
+# Leer multiples y hacer paginación
+@app.get("/users/")
+def read_users(
+    session: SessionDep,
+    offset: int = 0,
+    limit: Annotated[int, Query(le=100)] = 100,
+) -> list[User]:
+    users = session.exec(select(User).offset(offset).limit(limit)).all()
+    return users
+
+# Leer un único
+@app.get("/users/{user_id}")
+def read_user(user_id: int, session: SessionDep) -> User:
+    user = session.get(User, user_id)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    return user
+
+@app.delete("/users/{user_id}")
+def delete_user(user_id: int, session: SessionDep):
+    user = session.get(User, user_id)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    session.delete(user)
+    session.commit()
+    return {"ok": True}
 
 # Enable CORS for development (adjust origins for production)
 app.add_middleware(
