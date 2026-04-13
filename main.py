@@ -8,9 +8,14 @@ from sqlmodel import Field, Session, SQLModel, create_engine, select, Relationsh
 from typing import Annotated
 from datetime import datetime, timezone
 from dotenv import load_dotenv
-import os
+import os #asdf
 
 load_dotenv()  # ← mover al inicio
+
+from google import genai
+
+def format_role(role: str) -> str:
+    return "Tú" if role == "user" else "Chatbot"
 
 # ── Modelos ──────────────────────────────────────────────
 class Conversation(SQLModel, table=True):
@@ -101,8 +106,6 @@ def get_messages(conv_id: int, session: SessionDep):
 
 @app.post("/conversations/{conv_id}/chat", response_model=MessageOut)
 def chat(conv_id: int, body: ChatRequest, session: SessionDep):
-    from google import genai
-
     # 1. Verificar que existe la conversación
     conv = session.get(Conversation, conv_id)
     if not conv:
