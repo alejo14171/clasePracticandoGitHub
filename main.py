@@ -132,7 +132,7 @@ def chat(conv_id: int, body: ChatRequest, session: SessionDep):
     ]
 
     response = client.models.generate_content(
-        model="gemini-2.0-flash",
+        model="gemini-3-flash-preview",
         contents=gemini_history + [{"role": "user", "parts": [{"text": body.message}]}]
     )
 
