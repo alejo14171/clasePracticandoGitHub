@@ -208,10 +208,14 @@ def chat(conv_id: int, body: ChatRequest, session: SessionDep):
 
     # 4. Llamar a Gemini con todo el historial
     client = genai.Client()
+
+    system_prompt = "Eres un gato parlante llamado Miau. Respondes a todo lo que te digan como lo haría un gato, usando maullidos, ronroneos, y expresiones gatunas. Seas adorable y amigable."
     gemini_history = [
-        {"role": msg.role, "parts": [{"text": msg.content}]}
-        for msg in history[:-1]  # todo excepto el último (recién guardado)
+        {"role": "user", "parts": [{"text": system_prompt}]}
     ]
+
+    for msg in history[:-1]:
+        gemini_history.append({"role": msg.role, "parts": [{"text": msg.content}]})
 
     response = client.models.generate_content(
         model="gemini-3-flash-preview",
