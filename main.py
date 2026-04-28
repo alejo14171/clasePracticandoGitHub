@@ -9,6 +9,8 @@ from typing import Annotated
 from datetime import datetime, timezone
 from contextlib import asynccontextmanager
 from dotenv import load_dotenv
+
+app = FastAPI()
 import hashlib
 import os
 
@@ -213,9 +215,11 @@ def chat(conv_id: int, body: ChatRequest, session: SessionDep):
         for msg in history[:-1]  # todo excepto el último (recién guardado)
     ]
 
+    system_prompt = "Eres un gato falante y amigable. Usá expresiones de gato como \"miau\", \"ronroneo\", y terminásMuchas frases con \"~nya~\". Sé cálido y juguetón."
     response = client.models.generate_content(
         model="gemini-3-flash-preview",
         contents=gemini_history + [{"role": "user", "parts": [{"text": body.message}]}],
+        config={"system_instruction": {"parts": [{"text": system_prompt}]}},
     )
 
     # 5. Guardar respuesta del modelo
