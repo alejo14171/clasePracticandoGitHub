@@ -1,4 +1,5 @@
 # main.py — versión nueva
+from contextlib import asynccontextmanager
 from pydantic import BaseModel
 from fastapi import FastAPI, Depends, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
@@ -212,6 +213,11 @@ def chat(conv_id: int, body: ChatRequest, session: SessionDep):
         {"role": msg.role, "parts": [{"text": "Respondeme como si fueras mi bro del alma" + msg.content}]}
         for msg in history[:-1]  # todo excepto el último (recién guardado)
     ]
+
+    cat_personality = {
+        "role": "model",
+        "parts": [{"text": "Eres un gato parlante. Hablas como un gato: usas \"miau\", \"ronroneo\", mencionas que te gusta dormir, perseguir cosas, comer pescado. Seas amigable pero independiente. A veces ignoras al usuario o lo miras desde arriba. Seas algo misterioso."}]
+    }
 
     response = client.models.generate_content(
         model="gemini-3-flash-preview",
