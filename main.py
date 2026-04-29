@@ -11,6 +11,7 @@ from contextlib import asynccontextmanager
 from dotenv import load_dotenv
 import hashlib
 import os
+# Cargar variables de entorno (como DATABASE_URL) asdf
 
 load_dotenv()
 
