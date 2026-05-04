@@ -128,6 +128,11 @@ def root():
     return FileResponse("static/index.html")
 
 
+@app.get("/health")
+def health():
+    return {"status": "ok"}
+
+
 # ── Auth ──────────────────────────────────────────────────────
 @app.post("/register", response_model=UserOut)
 def register(body: RegisterRequest, session: SessionDep):
