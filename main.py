@@ -16,7 +16,7 @@ load_dotenv()
 
 from google import genai
 
-
+#comentario de prueba para ver si se sube el cambio a git
 def format_role(role: str) -> str:
     return "Tú" if role == "user" else "Chatbot"
 
