@@ -218,7 +218,7 @@ def chat(conv_id: int, body: ChatRequest, session: SessionDep):
         for msg in history[:-1]  # todo excepto el último (recién guardado)
     ]
 
-    response = client.models.generate_content(
+    response = client.models.generate_content( #comentario cualquiera para probar el deploy
         model="gemini-3-flash-preview",
         contents=gemini_history + [{"role": "user", "parts": [{"text": body.message}]}],
     )
