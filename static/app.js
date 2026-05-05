@@ -12,7 +12,16 @@ document.addEventListener('DOMContentLoaded', function () {
   const userAvatar   = document.getElementById('user-avatar');
   const userNameEl   = document.getElementById('user-name');
   const logoutBtn    = document.getElementById('logout-btn');
-  const chatHeader   = document.getElementById('chat-header');
+  const chatHeader   = document.getElementById('chat-title');
+  const sidebar      = document.getElementById('sidebar');
+  const backdrop     = document.getElementById('sidebar-backdrop');
+  const menuBtn      = document.getElementById('menu-btn');
+
+  function openSidebar()  { sidebar.classList.add('open');    backdrop.classList.add('visible'); }
+  function closeSidebar() { sidebar.classList.remove('open'); backdrop.classList.remove('visible'); }
+
+  menuBtn.addEventListener('click', () => sidebar.classList.contains('open') ? closeSidebar() : openSidebar());
+  backdrop.addEventListener('click', closeSidebar);
 
   let currentConvId = null;
   let currentUser   = null;
@@ -57,7 +66,7 @@ document.addEventListener('DOMContentLoaded', function () {
         <div class="empty-icon">💬</div>
         <p>Seleccioná o creá una conversación</p>
       </div>`;
-    chatHeader.textContent = 'Seleccioná una conversación';
+    if (chatHeader) chatHeader.textContent = 'Seleccioná una conversación';
   }
 
   document.querySelectorAll('.auth-tab').forEach(tab => {
@@ -216,6 +225,7 @@ document.addEventListener('DOMContentLoaded', function () {
   async function selectConversation(convId, title) {
     currentConvId          = convId;
     chatHeader.textContent = title || `Conversación #${convId}`;
+    closeSidebar();
 
     document.querySelectorAll('.conv-item').forEach(el => {
       el.classList.toggle('active', Number(el.dataset.id) === convId);
