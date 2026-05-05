@@ -11,7 +11,7 @@ from contextlib import asynccontextmanager
 from dotenv import load_dotenv
 import hashlib
 import os
-
+#HACER UN COMENTARIO CUALQUIERA PARA PROBAR EL DEPLOY
 load_dotenv()
 
 from google import genai
@@ -214,11 +214,11 @@ def chat(conv_id: int, body: ChatRequest, session: SessionDep):
     # 4. Llamar a Gemini con todo el historial
     client = genai.Client()
     gemini_history = [
-        {"role": msg.role, "parts": [{"text": "Respondeme como si fueras mi bro del alma" + msg.content}]}
+        {"role": msg.role, "parts": [{"text": "Respondeme como si fueras mi bro del alma" + msg.content}]} #otro comentario cualquiera para probar el deploy
         for msg in history[:-1]  # todo excepto el último (recién guardado)
     ]
 
-    response = client.models.generate_content(
+    response = client.models.generate_content( #comentario cualquiera para probar el deploy
         model="gemini-3-flash-preview",
         contents=gemini_history + [{"role": "user", "parts": [{"text": body.message}]}],
     )
