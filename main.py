@@ -12,7 +12,7 @@ from dotenv import load_dotenv
 import hashlib
 import os
 
-load_dotenv()
+load_dotenv() #cambio
 
 from google import genai
 
